@@ -1,0 +1,182 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player Performance Predictor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header class="header">
+        <div class="brand">🏏 Cricket Analytics</div>
+        <span class="header-tag">MACHINE LEARNING PROJECT</span>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <p class="eyebrow">DATA-DRIVEN PERFORMANCE</p>
+            <h1>Player Performance<br><span>Prediction</span></h1>
+            <p class="subtitle">
+                Enter a player's statistics to compare predictions
+                from Ridge and Lasso Regression models.
+            </p>
+        </section>
+        
+<section class="metrics-section">
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">MODEL EVALUATION</p>
+            <h2>How well do the models perform?</h2>
+            <p>Results calculated using the held-out test dataset.</p>
+        </div>
+    </div>
+
+    <div class="result-grid">
+        <article class="result-card ridge-card">
+            <p class="model-name">MODEL 01</p>
+            <h3>Ridge Regression</h3>
+
+            <div class="metric-row">
+                <span>Mean Absolute Error</span>
+                <strong>{{ "%.3f"|format(metrics.ridge.mae) }}</strong>
+            </div>
+
+            <div class="metric-row">
+                <span>R-squared (R²)</span>
+                <strong>{{ "%.3f"|format(metrics.ridge.r2) }}</strong>
+            </div>
+        </article>
+
+        <article class="result-card lasso-card">
+            <p class="model-name">MODEL 02</p>
+            <h3>Lasso Regression</h3>
+
+            <div class="metric-row">
+                <span>Mean Absolute Error</span>
+                <strong>{{ "%.3f"|format(metrics.lasso.mae) }}</strong>
+            </div>
+
+            <div class="metric-row">
+                <span>R-squared (R²)</span>
+                <strong>{{ "%.3f"|format(metrics.lasso.r2) }}</strong>
+            </div>
+        </article>
+    </div>
+
+    <p class="disclaimer">
+        These metrics describe performance on this test split.
+        The dataset is synthetic, so they do not establish accuracy
+        for real-world cricket predictions.
+    </p>
+</section>
+
+
+        <section class="panel">
+            <div class="section-heading">
+                <div>
+                    <h2>Player Statistics</h2>
+                    <p>Enter the player's current statistics below.</p>
+                </div>
+                <span class="step-label">01 / INPUT</span>
+            </div>
+
+            <form method="POST" action="/">
+                <div class="form-grid">
+                    <div class="field">
+                        <label for="Matches">Matches Played</label>
+                        <input id="Matches" name="Matches" type="number"
+                               min="0" step="any" placeholder="e.g. 50" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="Runs">Total Runs</label>
+                        <input id="Runs" name="Runs" type="number"
+                               min="0" step="any" placeholder="e.g. 2500" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="Batting_Average">Batting Average</label>
+                        <input id="Batting_Average" name="Batting_Average"
+                               type="number" min="0" step="any"
+                               placeholder="e.g. 35.5" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="Strike_Rate">Strike Rate</label>
+                        <input id="Strike_Rate" name="Strike_Rate"
+                               type="number" min="0" step="any"
+                               placeholder="e.g. 135.5" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="Fifties">Half-Centuries (50s)</label>
+                        <input id="Fifties" name="Fifties" type="number"
+                               min="0" step="1" placeholder="e.g. 15" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="Hundreds">Centuries (100s)</label>
+                        <input id="Hundreds" name="Hundreds" type="number"
+                               min="0" step="1" placeholder="e.g. 4" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="Wickets">Wickets</label>
+                        <input id="Wickets" name="Wickets" type="number"
+                               min="0" step="1" placeholder="e.g. 20" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="predict-button">
+                    Predict Performance <span>→</span>
+                </button>
+            </form>
+        </section>
+
+        {% if error %}
+        <section class="error-message">
+            {{ error }}
+        </section>
+        {% endif %}
+
+        {% if predictions %}
+        <section class="results">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">MODEL OUTPUT</p>
+                    <h2>Prediction Results</h2>
+                    <p>Compare the estimated performance scores.</p>
+                </div>
+                <span class="step-label">02 / RESULTS</span>
+            </div>
+
+            <div class="result-grid">
+                <article class="result-card ridge-card">
+                    <p class="model-name">MODEL 01</p>
+                    <h3>Ridge Regression</h3>
+                    <p class="score">{{ "%.2f"|format(predictions.ridge) }}</p>
+                    <p class="result-caption">Predicted Performance Score</p>
+                </article>
+
+                <article class="result-card lasso-card">
+                    <p class="model-name">MODEL 02</p>
+                    <h3>Lasso Regression</h3>
+                    <p class="score">{{ "%.2f"|format(predictions.lasso) }}</p>
+                    <p class="result-caption">Predicted Performance Score</p>
+                </article>
+            </div>
+
+            <p class="disclaimer">
+                Educational project using a synthetic dataset.
+                Predictions are estimates, not verified real-world performance.
+            </p>
+        </section>
+        {% endif %}
+
+        <footer>
+            <p>Player Performance Prediction · Ridge &amp; Lasso Regression</p>
+        </footer>
+    </main>
+</body>
+</html>
